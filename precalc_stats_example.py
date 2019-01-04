@@ -11,8 +11,10 @@ import tensorflow as tf
 ########
 # PATHS
 ########
-data_path = 'data' # set path to training set images
-output_path = 'fid_stats.npz' # path for where to store the statistics
+base_path = '/home/lz01a008/git/learning-object-representations-by-mixing-scenes/src/datasets/coco/2017_test/version/v1/'
+data_path = os.path.join(base_path, 'full') # set path to training set images
+output_path = os.path.join(base_path, 'fid', 'te_v1_fid_stats.npz') # path for where to store the statistics
+
 # if you have downloaded and extracted
 #   http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz
 # set this path to the directory where the extracted files are, otherwise
