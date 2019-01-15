@@ -281,7 +281,7 @@ def check_or_download_inception(inception_path):
 
 
 def _handle_path(path, sess, low_profile=False):
-    if type(path) == np.ndarray and path.endswith('.npz'):
+    if not type(path) == np.ndarray and path.endswith('.npz'):
         f = np.load(path)
         m, s = f['mu'][:], f['sigma'][:]
         f.close()
