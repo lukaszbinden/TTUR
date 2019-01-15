@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# LZ 15.01.19: Taken from:
+# https://github.com/bioinf-jku/TTUR
+# ##
+
 ''' Calculates the Frechet Inception Distance (FID) to evalulate GANs.
 
 The FID metric calculates the distance between two distributions of images.
@@ -276,10 +281,15 @@ def check_or_download_inception(inception_path):
 
 
 def _handle_path(path, sess, low_profile=False):
-    if path.endswith('.npz'):
+    if type(path) == np.ndarray and path.endswith('.npz'):
         f = np.load(path)
         m, s = f['mu'][:], f['sigma'][:]
         f.close()
+    elif type(path) == np.ndarray:
+        assert not low_profile, "low_profile not supported yet"
+        x = path # path is the preloaded array of images
+        m, s = calculate_activation_statistics(x, sess)
+        del x  # clean up memory
     else:
         path = pathlib.Path(path)
         files = list(path.glob('*.jpg')) + list(path.glob('*.png'))
@@ -297,7 +307,7 @@ def calculate_fid_given_paths(paths, inception_path, low_profile=False):
     inception_path = check_or_download_inception(inception_path)
 
     for p in paths:
-        if not os.path.exists(p):
+        if not type(p) == np.ndarray and not os.path.exists(p):
             raise RuntimeError("Invalid path: %s" % p)
 
     create_inception_graph(str(inception_path))
